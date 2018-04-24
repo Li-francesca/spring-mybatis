@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.BlogMapper">
+
+    <resultMap id="CommentResult" type="Comment">
+        <id property="id" column="comment_id"/>
+        <result property="context" column="context2"/>
+        <result property="time" column="time"/>
+        <result property="user.id" column="user_id2"/>
+        <result property="blog.id" column="blog_id"/>
+    </resultMap>
+    <resultMap id="BlogResult" type="Blog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="context" column="context"/>
+        <result property="date" column="date"/>
+        <result property="author.id" column="user_id"/>
+        <collection property="commentList" resultMap="CommentResult"/>
+    </resultMap>
+    <insert id="newBlog" parameterType="Blog">
+        INSERT INTO blog (title,context,date,user_id) value(#{title},#{context},#{date},#{author.id})
+    </insert>
+    <delete id="delBlog" parameterType="int">
+        DELETE FROM blog WHERE id=#{id}
+    </delete>
+    <update id="updateBlog" parameterType="Blog">
+        UPDATE blog SET title=#{title},context=#{context},date=#{date},user_id=#{author.id} WHERE id=#{id}
+    </update>
+    <select id="queryBlogbyId" parameterType="int" resultMap="BlogResult">
+        SELECT blog.id,blog.title,blog.context,blog.date,blog.user_id,
+         comment.user_id AS user_id2,comment.context AS context2,comment.time ,comment.id AS comment_id,comment.blog_id
+         FROM blog LEFT JOIN comment ON comment.blog_id=blog.id WHERE blog.id=#{id}
+    </select>
+    <select id="listAllBlog" resultMap="BlogResult">
+        SELECT blog.id,blog.title,blog.context,blog.date,blog.user_id,
+         comment.user_id AS user_id2,comment.context AS context2,comment.time ,comment.id AS comment_id,comment.blog_id
+        from blog LEFT JOIN comment ON comment.blog_id=blog.id
+    </select>
+    <select id="queryBlogByTitle" parameterType="java.lang.String" resultMap="BlogResult">
+        SELECT blog.id,blog.title,blog.context,blog.date,blog.user_id,
+         comment.user_id AS user_id2,comment.context AS context2,comment.time ,comment.id AS comment_id,comment.blog_id
+        from blog LEFT JOIN comment ON comment.blog_id=blog.id WHERE title=#{title}
+    </select>
+</mapper>

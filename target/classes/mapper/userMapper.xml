@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.UserMapper">
+    <resultMap id="UserResult" type="User">
+        <id property="id" column="id"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="dob" column="dob"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+    <insert id="newUser" parameterType="User">
+        INSERT INTO `user` (password, name, dob, phone) VALUES (#{password},#{name},#{dob},#{phone})
+    </insert>
+    <delete id="delUser" parameterType="int">
+        DELETE FROM `user` WHERE id=#{id}
+    </delete>
+    <update id="updateUser" parameterType="User">
+        UPDATE `user` SET password=#{password},name=#{name},dob=#{dob},phone=#{phone} WHERE id=#{id}
+    </update>
+    <select id="queryUserById" parameterType="int" resultMap="UserResult">
+        SELECT * FROM `user` WHERE id=#{id}
+    </select>
+    <select id="listAllUser" resultMap="UserResult">
+        SELECT * FROM `user`
+    </select>
+    <select id="queryUserByName" parameterType="java.lang.String" resultMap="UserResult">
+        SELECT * FROM `user` WHERE name=#{name}
+        </select>
+        </mapper>
